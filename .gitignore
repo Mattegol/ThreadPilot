@@ -1,0 +1,51 @@
+# ============================
+# Visual Studio / .NET ignores
+# ============================
+
+# Visual Studio workspace & cache
+.vs/
+*.slnx
+*.suo
+*.user
+*.userosscache
+*.cache
+*.log
+
+# Build outputs
+bin/
+obj/
+Debug/
+Release/
+
+# Test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.opencover
+*.vsmdi
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Rider / ReSharper (optional)
+.idea/
+*.DotSettings.user
+
+# VS Code (optional)
+.vscode/
+
+# ============================
+# OS generated files
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+# Local environment files
+# ============================
+.env
+.env.local
