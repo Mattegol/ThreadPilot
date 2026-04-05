@@ -24,6 +24,7 @@ builder.Services.AddHttpClient<IVehicleClient, VehicleClient>(client =>
 {
     options.Retry.MaxRetryAttempts = 2;
     options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(2);
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(1);
 });
 
 var app = builder.Build();

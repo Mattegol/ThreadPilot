@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http.Json;
 using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 
@@ -20,6 +19,9 @@ public sealed class VehicleClient : IVehicleClient
 
         if (response.StatusCode == HttpStatusCode.NotFound)
             return Result<VehicleDto>.Failure(Errors.NotFound);
+
+        if (response.StatusCode == HttpStatusCode.BadRequest)
+            return Result<VehicleDto>.Failure(Errors.InvalidInput);
 
         if (!response.IsSuccessStatusCode)
             return Result<VehicleDto>.Failure(Errors.DependencyFailure);
