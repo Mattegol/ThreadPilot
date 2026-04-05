@@ -1,8 +1,30 @@
+using Scalar.AspNetCore;
+using ThreadPilot.InsuranceService.Insurances;
+using ThreadPilot.InsuranceService.Vehicles;
+using ThreadPilot.Shared.Results;
+using Microsoft.Extensions.Http.Resilience;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Fixed port
+builder.WebHost.UseUrls("https://localhost:5002");
+
 builder.Services.AddOpenApi();
+
+builder.Services.AddSingleton<IInsuranceRepository, InMemoryInsuranceRepository>();
+builder.Services.AddSingleton<IInsurancePricingService, InsurancePricingService>();
+builder.Services.AddSingleton<IInsuranceService, InsuranceService>();
+
+builder.Services.AddHttpClient<IVehicleClient, VehicleClient>(client =>
+{
+    var baseUrl = builder.Configuration["VehicleService:BaseUrl"];
+    client.BaseAddress = new Uri(baseUrl!);
+})
+.AddStandardResilienceHandler(options =>
+{
+    options.Retry.MaxRetryAttempts = 2;
+    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(2);
+});
 
 var app = builder.Build();
 
@@ -10,32 +32,21 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapGet("/api/insurances/{personalNumber}", async (
+    string personalNumber,
+    IInsuranceService service,
+    CancellationToken ct) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    var result = await service.GetInsurancesAsync(personalNumber, ct);
+    return result.ToHttpResult();
 })
-.WithName("GetWeatherForecast");
+.WithName("GetInsurancesByPersonalNumber");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+public partial class Program { }
