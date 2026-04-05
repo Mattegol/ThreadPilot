@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Shouldly;
 using ThreadPilot.VehicleService.Vehicles;
 
 namespace ThreadPilot.VehicleService.Tests;
@@ -13,9 +13,9 @@ public class VehicleServiceTests
 
         var result = service.GetVehicle("ABC123");
 
-        result.IsSuccess.Should().BeTrue();
-        result.Value.Should().NotBeNull();
-        result.Value!.RegistrationNumber.Should().Be("ABC123");
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value!.RegistrationNumber.ShouldBe("ABC123");
     }
 
     [Fact]
@@ -26,9 +26,9 @@ public class VehicleServiceTests
 
         var result = service.GetVehicle("INVALID");
 
-        result.IsSuccess.Should().BeFalse();
-        result.Error.Should().NotBeNull();
-        result.Error!.Code.Should().Be("validation_error");
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.ShouldNotBeNull();
+        result.Error!.Code.ShouldBe("validation_error");
     }
 
     [Fact]
@@ -39,7 +39,8 @@ public class VehicleServiceTests
 
         var result = service.GetVehicle("AAA999");
 
-        result.IsSuccess.Should().BeFalse();
-        result.Error!.Code.Should().Be("not_found");
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.ShouldNotBeNull();
+        result.Error!.Code.ShouldBe("not_found");
     }
 }

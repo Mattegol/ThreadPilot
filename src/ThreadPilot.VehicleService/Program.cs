@@ -1,4 +1,5 @@
 using Scalar.AspNetCore;
+using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 using ThreadPilot.VehicleService.Vehicles;
 
@@ -25,14 +26,19 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 // TODO Versioning
 app.MapGet("/api/vehicles/{registrationNumber}", (string registrationNumber, IVehicleService service) =>
 {
     var result = service.GetVehicle(registrationNumber);
     return result.ToHttpResult();
 })
-.WithName("GetVehicleByRegistrationNumber");
+.WithName("GetVehicleByRegistrationNumber")
+.WithSummary("Get vehicle information by registration number")
+.WithDescription("Returns vehicle details if the registration number exists.")
+.Produces<VehicleDto>(StatusCodes.Status200OK)
+.ProducesProblem(StatusCodes.Status400BadRequest)
+.ProducesProblem(StatusCodes.Status404NotFound)
+.ProducesProblem(StatusCodes.Status500InternalServerError);
 
 app.Run();
 

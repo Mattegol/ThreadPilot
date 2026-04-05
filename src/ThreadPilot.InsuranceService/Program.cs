@@ -1,8 +1,9 @@
+using Microsoft.Extensions.Http.Resilience;
 using Scalar.AspNetCore;
 using ThreadPilot.InsuranceService.Insurances;
 using ThreadPilot.InsuranceService.Vehicles;
+using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
-using Microsoft.Extensions.Http.Resilience;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,13 @@ app.MapGet("/api/insurances/{personalNumber}", async (
     var result = await service.GetInsurancesAsync(personalNumber, ct);
     return result.ToHttpResult();
 })
-.WithName("GetInsurancesByPersonalNumber");
+.WithName("GetInsurancesByPersonalNumber")
+.WithSummary("Get insurance products by personal number")
+.WithDescription("Returns all insurance products and monthly costs for a person. If car insurance exists, vehicle information is included when available.")
+.Produces<InsuranceResponseDto>(StatusCodes.Status200OK)
+.ProducesProblem(StatusCodes.Status400BadRequest)
+.ProducesProblem(StatusCodes.Status404NotFound)
+.ProducesProblem(StatusCodes.Status500InternalServerError);
 
 app.Run();
 

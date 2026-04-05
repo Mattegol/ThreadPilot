@@ -1,5 +1,5 @@
-﻿using FluentAssertions;
-using Moq;
+﻿using Moq;
+using Shouldly;
 using ThreadPilot.InsuranceService.Insurances;
 using ThreadPilot.InsuranceService.Vehicles;
 using ThreadPilot.Shared.Contracts;
@@ -24,8 +24,9 @@ public class InsuranceServiceTests
 
         var result = await service.GetInsurancesAsync("invalid", CancellationToken.None);
 
-        result.IsSuccess.Should().BeFalse();
-        result.Error!.Code.Should().Be("validation_error");
+        result.IsSuccess.ShouldBeFalse();
+        result.Error.ShouldNotBeNull();
+        result.Error!.Code.ShouldBe("validation_error");
     }
 
     [Fact]
@@ -46,8 +47,11 @@ public class InsuranceServiceTests
 
         var result = await service.GetInsurancesAsync("19800101-1234", CancellationToken.None);
 
-        result.IsSuccess.Should().BeTrue();
-        result.Value!.Insurances.Should().Contain(x => x.Type == InsuranceType.Car && x.Vehicle != null);
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+
+        result.Value!.Insurances.Any(x => x.Type == InsuranceType.Car && x.Vehicle != null)
+            .ShouldBeTrue();
 
         vehicleClientMock.Verify(
             x => x.GetVehicleAsync("ABC123", It.IsAny<CancellationToken>()),
@@ -72,7 +76,8 @@ public class InsuranceServiceTests
 
         var result = await service.GetInsurancesAsync("19770505-1111", CancellationToken.None);
 
-        result.IsSuccess.Should().BeTrue();
-        result.Value!.TotalMonthlyCost.Should().Be(10 + 20 + 30);
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value!.TotalMonthlyCost.ShouldBe(60);
     }
 }
