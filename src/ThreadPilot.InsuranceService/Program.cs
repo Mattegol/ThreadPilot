@@ -23,9 +23,9 @@ builder.Services.AddHttpClient<IVehicleClient, VehicleClient>(client =>
 })
 .AddStandardResilienceHandler(options =>
 {
-    options.Retry.MaxRetryAttempts = 2;
-    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(2);
-    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(1);
+    options.Retry.MaxRetryAttempts = builder.Configuration.GetValue<int>("HttpClient:MaxRetryAttempts");
+    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("HttpClient:AttemptTimeoutSeconds"));
+    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("HttpClient:TotalTimeoutSeconds"));
 });
 
 var app = builder.Build();
