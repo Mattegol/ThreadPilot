@@ -1,13 +1,14 @@
 using Scalar.AspNetCore;
 using ThreadPilot.InsuranceService.Insurances;
 using ThreadPilot.InsuranceService.Vehicles;
+using ThreadPilot.ServiceDefaults.Middleware;
 using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Fixed port
-builder.WebHost.UseUrls("https://localhost:5002");
+// Add Aspire service defaults (health checks, telemetry, resilience)
+builder.AddServiceDefaults();
 
 builder.Services.AddOpenApi();
 
@@ -15,19 +16,30 @@ builder.Services.AddSingleton<IInsuranceRepository, InMemoryInsuranceRepository>
 builder.Services.AddSingleton<IInsurancePricingService, InsurancePricingService>();
 builder.Services.AddSingleton<IInsuranceService, InsuranceService>();
 
+// HttpClient with service discovery and resilience (configured by ServiceDefaults)
 builder.Services.AddHttpClient<IVehicleClient, VehicleClient>(client =>
 {
-    var baseUrl = builder.Configuration["VehicleService:BaseUrl"];
-    client.BaseAddress = new Uri(baseUrl!);
-})
-.AddStandardResilienceHandler(options =>
-{
-    options.Retry.MaxRetryAttempts = builder.Configuration.GetValue<int>("HttpClient:MaxRetryAttempts");
-    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("HttpClient:AttemptTimeoutSeconds"));
-    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue<int>("HttpClient:TotalTimeoutSeconds"));
+    var baseUrl = builder.Configuration["VehicleService__BaseUrl"];
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        client.BaseAddress = new Uri(baseUrl);
+    }
+    else
+    {
+        // Use service discovery when running under Aspire
+        client.BaseAddress = new Uri("https://vehicleservice");
+    }
 });
+// Note: AddStandardResilienceHandler is now added by ServiceDefaults.ConfigureHttpClientDefaults
 
 var app = builder.Build();
+
+// Redirect root to Scalar API docs
+app.MapGet("/", () => Results.Redirect("/scalar/v1"))
+    .ExcludeFromDescription();
+
+// Add correlation ID middleware
+app.UseCorrelationId();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -53,6 +65,9 @@ app.MapGet("/api/insurances/{personalNumber}", async (
 .ProducesProblem(StatusCodes.Status400BadRequest)
 .ProducesProblem(StatusCodes.Status404NotFound)
 .ProducesProblem(StatusCodes.Status500InternalServerError);
+
+// Map health check endpoints
+app.MapDefaultEndpoints();
 
 app.Run();
 
