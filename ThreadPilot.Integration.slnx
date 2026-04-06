@@ -7,6 +7,8 @@
     <Project Path="src/ThreadPilot.InsuranceService/ThreadPilot.InsuranceService.csproj" />
     <Project Path="src/ThreadPilot.Shared/ThreadPilot.Shared.csproj" />
     <Project Path="src/ThreadPilot.VehicleService/ThreadPilot.VehicleService.csproj" />
+    <Project Path="ThreadPilot.AppHost/ThreadPilot.AppHost.csproj" Id="5bfcb80c-110c-417a-855a-26cb6925b3e9" />
+    <Project Path="ThreadPilot.ServiceDefaults/ThreadPilot.ServiceDefaults.csproj" Id="b411cbe9-04df-4723-88ba-bf49cd398cbd" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/ThreadPilot.InsuranceService.Tests/ThreadPilot.InsuranceService.Tests.csproj" />
