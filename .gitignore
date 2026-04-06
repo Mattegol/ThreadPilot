@@ -4,18 +4,26 @@
 
 # Visual Studio workspace & cache
 .vs/
-*.slnx
 *.suo
 *.user
 *.userosscache
-*.cache
-*.log
+*.sln.docstates
+*.slnx.old
 
 # Build outputs
 bin/
 obj/
-Debug/
-Release/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Oo]ut/
+
+# MSBuild logs
+*.binlog
 
 # Test results
 TestResults/
@@ -23,29 +31,50 @@ TestResults/
 *.coverage
 *.coveragexml
 *.opencover
-*.vsmdi
 
-# NuGet packages
+# NuGet packages (don't commit built packages)
 *.nupkg
 *.snupkg
-packages/
-.nuget/
 
-# Rider / ReSharper (optional)
+# Publish output
+publish/
+PublishProfiles/
+
+# Benchmark results
+BenchmarkDotNet.Artifacts/
+
+# ============================
+# IDE-specific
+# ============================
+
+# Rider
 .idea/
 *.DotSettings.user
 
-# VS Code (optional)
-.vscode/
+# VS Code (keep settings.json but ignore others)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # ============================
 # OS generated files
 # ============================
 .DS_Store
 Thumbs.db
+*.swp
+*~
 
 # ============================
-# Local environment files
+# Environment & secrets
 # ============================
 .env
 .env.local
+.env.*.local
+appsettings.*.user.json
+
+# ============================
+# Hot Reload
+# ============================
+*.sarif

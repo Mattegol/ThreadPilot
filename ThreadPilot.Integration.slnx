@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ThreadPilot.InsuranceService/ThreadPilot.InsuranceService.csproj" />
+    <Project Path="src/ThreadPilot.Shared/ThreadPilot.Shared.csproj" />
+    <Project Path="src/ThreadPilot.VehicleService/ThreadPilot.VehicleService.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ThreadPilot.InsuranceService.Tests/ThreadPilot.InsuranceService.Tests.csproj" />
+    <Project Path="tests/ThreadPilot.VehicleService.Tests/ThreadPilot.VehicleService.Tests.csproj" />
+  </Folder>
+</Solution>
