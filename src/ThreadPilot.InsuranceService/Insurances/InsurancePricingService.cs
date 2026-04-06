@@ -1,4 +1,4 @@
-﻿using ThreadPilot.Shared.Contracts;
+using ThreadPilot.Shared.Contracts;
 
 namespace ThreadPilot.InsuranceService.Insurances;
 

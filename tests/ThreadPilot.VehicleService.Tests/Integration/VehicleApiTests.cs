@@ -1,4 +1,4 @@
-﻿using Shouldly;
+using Shouldly;
 using System.Net;
 using System.Net.Http.Json;
 using ThreadPilot.Shared.Contracts;

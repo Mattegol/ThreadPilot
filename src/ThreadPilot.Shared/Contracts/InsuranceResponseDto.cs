@@ -1,4 +1,4 @@
-﻿namespace ThreadPilot.Shared.Contracts;
+namespace ThreadPilot.Shared.Contracts;
 
 public sealed record InsuranceResponseDto(
     string PersonalNumber,

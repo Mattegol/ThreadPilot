@@ -1,4 +1,4 @@
-﻿using ThreadPilot.InsuranceService.Vehicles;
+using ThreadPilot.InsuranceService.Vehicles;
 using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 

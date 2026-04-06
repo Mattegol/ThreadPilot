@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 

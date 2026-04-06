@@ -1,4 +1,4 @@
-﻿using Moq;
+using Moq;
 using Shouldly;
 using ThreadPilot.InsuranceService.Insurances;
 using ThreadPilot.InsuranceService.Vehicles;

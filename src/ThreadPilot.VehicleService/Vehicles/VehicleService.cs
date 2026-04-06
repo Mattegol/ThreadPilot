@@ -1,4 +1,4 @@
-﻿using ThreadPilot.Shared.Contracts;
+using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 
 namespace ThreadPilot.VehicleService.Vehicles;

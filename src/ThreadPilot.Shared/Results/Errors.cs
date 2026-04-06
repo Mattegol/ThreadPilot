@@ -1,4 +1,4 @@
-﻿namespace ThreadPilot.Shared.Results;
+namespace ThreadPilot.Shared.Results;
 
 public static class Errors
 {

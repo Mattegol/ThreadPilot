@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Http.Resilience;
 using Scalar.AspNetCore;
 using ThreadPilot.InsuranceService.Insurances;
 using ThreadPilot.InsuranceService.Vehicles;

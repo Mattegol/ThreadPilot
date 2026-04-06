@@ -1,4 +1,4 @@
-﻿namespace ThreadPilot.VehicleService.Vehicles;
+namespace ThreadPilot.VehicleService.Vehicles;
 
 public sealed record VehicleEntity(
     string RegistrationNumber,

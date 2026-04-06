@@ -1,4 +1,4 @@
-﻿namespace ThreadPilot.InsuranceService.Insurances;
+namespace ThreadPilot.InsuranceService.Insurances;
 
 public interface IInsuranceRepository
 {

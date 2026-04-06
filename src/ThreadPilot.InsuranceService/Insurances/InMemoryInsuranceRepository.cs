@@ -1,10 +1,10 @@
-﻿using ThreadPilot.Shared.Contracts;
+using ThreadPilot.Shared.Contracts;
 
 namespace ThreadPilot.InsuranceService.Insurances;
 
 public sealed class InMemoryInsuranceRepository : IInsuranceRepository
 {
-    private static readonly Dictionary<string, InsuranceProfileEntity> Profiles = new()
+    private static readonly Dictionary<string, InsuranceProfileEntity> _profiles = new()
     {
         ["19800101-1234"] = new InsuranceProfileEntity(
             "19800101-1234",
@@ -25,7 +25,7 @@ public sealed class InMemoryInsuranceRepository : IInsuranceRepository
 
     public InsuranceProfileEntity? GetByPersonalNumber(string personalNumber)
     {
-        Profiles.TryGetValue(personalNumber, out var profile);
+        _profiles.TryGetValue(personalNumber, out var profile);
         return profile;
     }
 }

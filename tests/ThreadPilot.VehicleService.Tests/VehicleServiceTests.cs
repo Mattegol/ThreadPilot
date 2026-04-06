@@ -1,4 +1,4 @@
-﻿using Shouldly;
+using Shouldly;
 using ThreadPilot.VehicleService.Vehicles;
 
 namespace ThreadPilot.VehicleService.Tests;
