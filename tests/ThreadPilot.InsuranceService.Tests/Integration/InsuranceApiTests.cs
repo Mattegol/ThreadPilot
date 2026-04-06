@@ -20,7 +20,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
         var response = await _client.GetAsync("/api/insurances/19951212-9999");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        
+
         var result = await response.Content.ReadFromJsonAsync<InsuranceResponseDto>();
         result.ShouldNotBeNull();
         result!.PersonalNumber.ShouldBe("19951212-9999");
@@ -34,10 +34,10 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
         var response = await _client.GetAsync("/api/insurances/19800101-1234");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        
+
         var result = await response.Content.ReadFromJsonAsync<InsuranceResponseDto>();
         result.ShouldNotBeNull();
-        
+
         var carInsurance = result!.Insurances.FirstOrDefault(x => x.Type == InsuranceType.Car);
         carInsurance.ShouldNotBeNull();
         carInsurance!.Vehicle.ShouldNotBeNull();
@@ -50,7 +50,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
         var response = await _client.GetAsync("/api/insurances/19770505-1111");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        
+
         var result = await response.Content.ReadFromJsonAsync<InsuranceResponseDto>();
         result.ShouldNotBeNull();
         result!.Insurances.Count.ShouldBe(3); // Pet, Health, Car

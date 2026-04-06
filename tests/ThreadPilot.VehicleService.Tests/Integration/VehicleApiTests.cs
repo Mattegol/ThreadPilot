@@ -1,6 +1,6 @@
-﻿using System.Net;
+﻿using Shouldly;
+using System.Net;
 using System.Net.Http.Json;
-using Shouldly;
 using ThreadPilot.Shared.Contracts;
 
 namespace ThreadPilot.VehicleService.Tests.Integration;
@@ -24,7 +24,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
         var response = await _client.GetAsync($"/api/vehicles/{registration}");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        
+
         var vehicle = await response.Content.ReadFromJsonAsync<VehicleDto>();
         vehicle.ShouldNotBeNull();
         vehicle!.RegistrationNumber.ShouldBe(registration);

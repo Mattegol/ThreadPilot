@@ -133,7 +133,7 @@ public class InsuranceServiceTests
 
         result.IsSuccess.ShouldBeTrue();
         result.Value.ShouldNotBeNull();
-        
+
         // 19770505-1111 has Pet (20) + Health (20) + Car (20) = 60
         result.Value!.TotalMonthlyCost.ShouldBe(60);
         result.Value!.Insurances.Count.ShouldBe(3);
@@ -163,9 +163,9 @@ public class InsuranceServiceTests
 
         result.IsSuccess.ShouldBeTrue();
         result.Value.ShouldNotBeNull();
-        result.Value!.Insurances.ShouldAllBe(x => 
-            x.Type != null && 
-            x.MonthlyCost > 0 && 
+        result.Value!.Insurances.ShouldAllBe(x =>
+            x.Type != null &&
+            x.MonthlyCost > 0 &&
             !string.IsNullOrEmpty(x.Type.ToString()));
     }
 
