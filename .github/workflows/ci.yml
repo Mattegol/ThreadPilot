@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Full history for better analysis
+        fetch-depth: 0
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -32,16 +32,16 @@ jobs:
           ${{ runner.os }}-nuget-
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ThreadPilot.Integration.slnx
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ThreadPilot.Integration.slnx --configuration Release --no-restore
 
     - name: Run Unit Tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~Integration" --logger "trx;LogFileName=unit-test-results.trx"
+      run: dotnet test ThreadPilot.Integration.slnx --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~Integration" --logger "trx;LogFileName=unit-test-results.trx"
       
     - name: Run Integration Tests
-      run: dotnet test --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName~Integration" --logger "trx;LogFileName=integration-test-results.trx"
+      run: dotnet test ThreadPilot.Integration.slnx --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName~Integration" --logger "trx;LogFileName=integration-test-results.trx"
 
     - name: Upload Test Results
       if: always()
@@ -85,13 +85,13 @@ jobs:
         dotnet-version: '10.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ThreadPilot.Integration.slnx
 
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build ThreadPilot.Integration.slnx --configuration Release --no-restore
 
     - name: Run dotnet format check
-      run: dotnet format --verify-no-changes --verbosity diagnostic
+      run: dotnet format ThreadPilot.Integration.slnx --verify-no-changes --verbosity diagnostic
 
   report:
     name: Test Report
