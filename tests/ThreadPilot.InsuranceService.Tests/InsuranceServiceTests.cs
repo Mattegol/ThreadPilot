@@ -184,4 +184,61 @@ public class InsuranceServiceTests
         result.Value!.Insurances.First().Type.ShouldBe(InsuranceType.Health);
         result.Value!.TotalMonthlyCost.ShouldBe(20); // Health insurance cost
     }
+
+    [Fact]
+    public async Task GetInsurancesAsync_WhenVehicleClientThrowsException_ShouldReturnInsuranceWithoutVehicleData()
+    {
+        // Arrange: Mock VehicleClient to throw an exception
+        _vehicleClientMock
+            .Setup(x => x.GetVehicleAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new HttpRequestException("Network error"));
+
+        // Act
+        var result = await _sut.GetInsurancesAsync("19800101-1234", CancellationToken.None);
+
+        // Assert: Service should handle exception gracefully
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+
+        // Car insurance should be returned without vehicle data (graceful degradation)
+        var carInsurance = result.Value!.Insurances.FirstOrDefault(x => x.Type == InsuranceType.Car);
+        carInsurance.ShouldNotBeNull();
+        carInsurance!.Vehicle.ShouldBeNull();
+
+        // Verify error was logged
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Unexpected error calling VehicleService")),
+                It.IsAny<HttpRequestException>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetInsurancesAsync_WhenVehicleClientThrowsTimeout_ShouldLogAndContinue()
+    {
+        // Arrange
+        _vehicleClientMock
+            .Setup(x => x.GetVehicleAsync("ABC123", It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new TimeoutException("Request timed out"));
+
+        // Act
+        var result = await _sut.GetInsurancesAsync("19800101-1234", CancellationToken.None);
+
+        // Assert
+        result.IsSuccess.ShouldBeTrue();
+        result.Value!.Insurances.First(x => x.Type == InsuranceType.Car).Vehicle.ShouldBeNull();
+
+        // Verify timeout exception was logged
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                It.IsAny<TimeoutException>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
 }

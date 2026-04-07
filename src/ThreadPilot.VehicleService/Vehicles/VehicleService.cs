@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
 
@@ -35,7 +34,7 @@ public sealed class VehicleService : IVehicleService
                 return Result<VehicleDto>.Failure(Errors.NotFound);
             }
 
-            _logger.LogInformation("Successfully retrieved vehicle {RegistrationNumber} - {Brand} {Model}", 
+            _logger.LogInformation("Successfully retrieved vehicle {RegistrationNumber} - {Brand} {Model}",
                 entity.RegistrationNumber, entity.Brand, entity.Model);
 
             return Result<VehicleDto>.Success(new VehicleDto(
@@ -47,8 +46,8 @@ public sealed class VehicleService : IVehicleService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, 
-                "Unexpected error retrieving vehicle for registration number {RegistrationNumber}", 
+            _logger.LogError(ex,
+                "Unexpected error retrieving vehicle for registration number {RegistrationNumber}",
                 registrationNumber);
 
             return Result<VehicleDto>.Failure(

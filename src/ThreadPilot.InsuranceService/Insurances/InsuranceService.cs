@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using ThreadPilot.InsuranceService.Vehicles;
 using ThreadPilot.Shared.Contracts;
 using ThreadPilot.Shared.Results;
@@ -44,7 +43,7 @@ public sealed class InsuranceService : IInsuranceService
                 return Result<InsuranceResponseDto>.Failure(Errors.NotFound);
             }
 
-            _logger.LogInformation("Found {ProductCount} insurance product(s) for {PersonalNumber}", 
+            _logger.LogInformation("Found {ProductCount} insurance product(s) for {PersonalNumber}",
                 profile.Products.Count, personalNumber);
 
             var insurances = new List<InsuranceDto>();
@@ -59,7 +58,7 @@ public sealed class InsuranceService : IInsuranceService
 
                     if (!string.IsNullOrWhiteSpace(profile.CarRegistrationNumber))
                     {
-                        _logger.LogDebug("Fetching vehicle data for registration {RegistrationNumber}", 
+                        _logger.LogDebug("Fetching vehicle data for registration {RegistrationNumber}",
                             profile.CarRegistrationNumber);
 
                         try
@@ -70,19 +69,19 @@ public sealed class InsuranceService : IInsuranceService
                             if (vehicleResult.IsSuccess)
                             {
                                 vehicle = vehicleResult.Value;
-                                _logger.LogInformation("Successfully enriched car insurance with vehicle data for {RegistrationNumber}", 
+                                _logger.LogInformation("Successfully enriched car insurance with vehicle data for {RegistrationNumber}",
                                     profile.CarRegistrationNumber);
                             }
                             else
                             {
-                                _logger.LogWarning("Failed to fetch vehicle data for {RegistrationNumber}: {ErrorCode} - {ErrorMessage}", 
+                                _logger.LogWarning("Failed to fetch vehicle data for {RegistrationNumber}: {ErrorCode} - {ErrorMessage}",
                                     profile.CarRegistrationNumber, vehicleResult.Error?.Code, vehicleResult.Error?.Message);
                             }
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, 
-                                "Unexpected error calling VehicleService for registration {RegistrationNumber}. Returning car insurance without vehicle data", 
+                            _logger.LogError(ex,
+                                "Unexpected error calling VehicleService for registration {RegistrationNumber}. Returning car insurance without vehicle data",
                                 profile.CarRegistrationNumber);
 
                             // Graceful degradation: continue without vehicle data if call throws
@@ -100,7 +99,7 @@ public sealed class InsuranceService : IInsuranceService
 
             var total = insurances.Sum(x => x.MonthlyCost);
 
-            _logger.LogInformation("Successfully retrieved {InsuranceCount} insurance(s) with total monthly cost {TotalCost:C} for {PersonalNumber}", 
+            _logger.LogInformation("Successfully retrieved {InsuranceCount} insurance(s) with total monthly cost {TotalCost:C} for {PersonalNumber}",
                 insurances.Count, total, personalNumber);
 
             return Result<InsuranceResponseDto>.Success(new InsuranceResponseDto(
@@ -111,8 +110,8 @@ public sealed class InsuranceService : IInsuranceService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, 
-                "Unexpected error retrieving insurances for personal number {PersonalNumber}", 
+            _logger.LogError(ex,
+                "Unexpected error retrieving insurances for personal number {PersonalNumber}",
                 personalNumber);
 
             return Result<InsuranceResponseDto>.Failure(
