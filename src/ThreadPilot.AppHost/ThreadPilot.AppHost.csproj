@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\ThreadPilot.InsuranceService\ThreadPilot.InsuranceService.csproj" />
-    <ProjectReference Include="..\src\ThreadPilot.VehicleService\ThreadPilot.VehicleService.csproj" />
+    <ProjectReference Include="..\ThreadPilot.InsuranceService\ThreadPilot.InsuranceService.csproj" />
+    <ProjectReference Include="..\ThreadPilot.VehicleService\ThreadPilot.VehicleService.csproj" />
   </ItemGroup>
 
 </Project>

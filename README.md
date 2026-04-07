@@ -1,4 +1,4 @@
-﻿# ThreadPilot
+# ThreadPilot
 
 A .NET 10 microservices demonstration project built with .NET Aspire, showcasing modern distributed application development patterns, service orchestration, and best practices for error handling.
 

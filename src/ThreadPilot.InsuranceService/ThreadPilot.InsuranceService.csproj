@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ThreadPilot.ServiceDefaults\ThreadPilot.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\ThreadPilot.ServiceDefaults\ThreadPilot.ServiceDefaults.csproj" />
     <ProjectReference Include="..\ThreadPilot.Shared\ThreadPilot.Shared.csproj" />
   </ItemGroup>
 
