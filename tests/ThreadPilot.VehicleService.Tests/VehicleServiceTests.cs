@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using Shouldly;
 using ThreadPilot.VehicleService.Vehicles;
 
@@ -11,7 +12,7 @@ public class VehicleServiceTests
     public VehicleServiceTests()
     {
         _repo = new InMemoryVehicleRepository();
-        _sut = new Vehicles.VehicleService(_repo);
+        _sut = new Vehicles.VehicleService(_repo, NullLogger<Vehicles.VehicleService>.Instance);
     }
 
     [Theory]

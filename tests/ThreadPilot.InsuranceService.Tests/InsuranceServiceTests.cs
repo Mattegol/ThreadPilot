@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
 using ThreadPilot.InsuranceService.Insurances;
@@ -12,6 +13,7 @@ public class InsuranceServiceTests
     private readonly IInsuranceRepository _repo;
     private readonly IInsurancePricingService _pricing;
     private readonly Mock<IVehicleClient> _vehicleClientMock;
+    private readonly Mock<ILogger<Insurances.InsuranceService>> _loggerMock;
     private readonly Insurances.InsuranceService _sut;
 
     public InsuranceServiceTests()
@@ -19,10 +21,12 @@ public class InsuranceServiceTests
         _repo = new InMemoryInsuranceRepository();
         _pricing = new InsurancePricingService();
         _vehicleClientMock = new Mock<IVehicleClient>();
+        _loggerMock = new Mock<ILogger<Insurances.InsuranceService>>();
         _sut = new Insurances.InsuranceService(
             _repo,
             _pricing,
-            _vehicleClientMock.Object);
+            _vehicleClientMock.Object,
+            _loggerMock.Object);
     }
 
     [Fact]
