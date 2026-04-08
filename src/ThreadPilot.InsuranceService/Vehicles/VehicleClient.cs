@@ -15,7 +15,7 @@ public sealed class VehicleClient : IVehicleClient
 
     public async Task<Result<VehicleDto>> GetVehicleAsync(string registrationNumber, CancellationToken ct)
     {
-        var response = await _httpClient.GetAsync($"/api/vehicles/{registrationNumber}", ct);
+        var response = await _httpClient.GetAsync($"/api/v1/vehicles/{registrationNumber}", ct);
 
         if (response.StatusCode == HttpStatusCode.NotFound)
             return Result<VehicleDto>.Failure(Errors.NotFound);

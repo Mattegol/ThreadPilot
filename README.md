@@ -430,6 +430,10 @@ I have worked with similar microservices architectures and integration patterns 
 
 If given more time, here are recommended enhancements to make ThreadPilot production-ready:
 
+**Code Quality & Patterns**
+- **Clean Code**: No magic strings, smaller methods, returning enum name instead of number for clarity. Clean up unused code or redundant code.
+- **Options Pattern** For strongly typed configuration.
+
 **Infrastructure & Resilience:**
 - **Database Integration**: Replace in-memory repositories with Entity Framework Core + PostgreSQL/SQL Server
 - **Distributed Caching**: Add HybridCache or FusionCache with Redis cache for frequently accessed vehicle/insurance data
@@ -447,6 +451,7 @@ If given more time, here are recommended enhancements to make ThreadPilot produc
 - **Custom Metrics**: Add business metrics (e.g., request success rate, average response time per endpoint)
 - **Distributed Tracing Correlation**: Ensure all log entries include correlation IDs across service boundaries
 - **Health Check Endpoints**: Add comprehensive health checks that verify database connectivity, external service availability, etc.
+- **Alerts**: Add alerts to email and/or Teams Chat when something goes wrong.
 
 **Testing & Quality:**
 - **Unit Testing**: Continue adding unit tests
