@@ -1,6 +1,6 @@
 # ThreadPilot
 
-A demonstration microservices application built with .NET Aspire, showcasing modern cloud-native patterns and best practices.
+A demonstration microservices application built with .NET Aspire.
 
 ## Project Overview
 
@@ -11,7 +11,7 @@ ThreadPilot is a sample system that demonstrates:
 - **Standardized Error Responses**: RFC 7807 Problem Details for consistent HTTP error responses
 - **Observability**: Built-in health checks, telemetry, and distributed tracing with .NET Aspire
 - **API Versioning**: URL path versioning strategy for stable, evolvable APIs
-- **Code Style Enforcement**: EditorConfig for consistent code formatting across the team and IDEs
+- **Code Quality**: EditorConfig for consistent formatting and GitHub Actions CI for automated testing
 
 ### Services
 
@@ -356,6 +356,15 @@ The solution includes comprehensive test coverage:
 - **Shouldly**: Fluent assertions
 - **Moq**: Mocking dependencies
 - **WebApplicationFactory**: Integration testing for HTTP endpoints
+
+## Continuous Integration
+
+GitHub Actions CI pipeline (`.github/workflows/ci.yml`) runs on every push:
+- Builds the solution
+- Executes all tests
+- Validates `.editorconfig` formatting rules
+
+This ensures code quality and prevents regressions before merging.
 
 ## Project Structure
 
