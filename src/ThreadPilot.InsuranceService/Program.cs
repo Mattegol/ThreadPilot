@@ -50,7 +50,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/insurances/{personalNumber}", async (
+// ============================================
+// V1 API Endpoints
+// ============================================
+var v1 = app.MapGroup("/api/v1")
+    .WithTags("V1");
+
+v1.MapGet("/insurances/{personalNumber}", async (
     string personalNumber,
     IInsuranceService service,
     CancellationToken ct) =>

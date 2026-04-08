@@ -32,7 +32,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/api/vehicles/{registrationNumber}", (
+// ============================================
+// V1 API Endpoints
+// ============================================
+var v1 = app.MapGroup("/api/v1")
+    .WithTags("V1");
+
+v1.MapGet("/vehicles/{registrationNumber}", (
     string registrationNumber,
     IVehicleService service) =>
 {

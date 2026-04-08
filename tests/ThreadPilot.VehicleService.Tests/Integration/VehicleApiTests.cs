@@ -21,7 +21,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     public async Task GetVehicle_WithValidRegistration_ReturnsOkWithCorrectData(
         string registration, string brand, string model, int year)
     {
-        var response = await _client.GetAsync($"/api/vehicles/{registration}");
+        var response = await _client.GetAsync($"/api/v1/vehicles/{registration}");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -36,7 +36,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     [Fact]
     public async Task GetVehicle_WithInvalidRegistration_ReturnsBadRequest()
     {
-        var response = await _client.GetAsync("/api/vehicles/invalid");
+        var response = await _client.GetAsync("/api/v1/vehicles/invalid");
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
@@ -44,7 +44,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     [Fact]
     public async Task GetVehicle_WithEmptyRegistration_ReturnsNotFound()
     {
-        var response = await _client.GetAsync("/api/vehicles/");
+        var response = await _client.GetAsync("/api/v1/vehicles/");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
@@ -52,7 +52,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     [Fact]
     public async Task GetVehicle_WithLowercaseRegistration_ReturnsBadRequest()
     {
-        var response = await _client.GetAsync("/api/vehicles/abc123");
+        var response = await _client.GetAsync("/api/v1/vehicles/abc123");
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
@@ -60,7 +60,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     [Fact]
     public async Task GetVehicle_WithUnknownRegistration_ReturnsNotFound()
     {
-        var response = await _client.GetAsync("/api/vehicles/ZZZ999");
+        var response = await _client.GetAsync("/api/v1/vehicles/ZZZ999");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
@@ -68,7 +68,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     [Fact]
     public async Task GetVehicle_ResponseContentType_IsApplicationJson()
     {
-        var response = await _client.GetAsync("/api/vehicles/ABC123");
+        var response = await _client.GetAsync("/api/v1/vehicles/ABC123");
 
         response.Content.Headers.ContentType?.MediaType.ShouldBe("application/json");
     }
@@ -76,7 +76,7 @@ public class VehicleApiTests : IClassFixture<VehicleApiFactory>
     [Fact]
     public async Task GetVehicle_WithValidRegistration_ReturnsValidJsonStructure()
     {
-        var response = await _client.GetAsync("/api/vehicles/ABC123");
+        var response = await _client.GetAsync("/api/v1/vehicles/ABC123");
         var json = await response.Content.ReadAsStringAsync();
 
         json.ShouldContain("registrationNumber");

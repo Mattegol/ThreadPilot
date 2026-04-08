@@ -17,7 +17,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithValidPersonalNumber_ReturnsOkWithData()
     {
-        var response = await _client.GetAsync("/api/insurances/19951212-9999");
+        var response = await _client.GetAsync("/api/v1/insurances/19951212-9999");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -31,7 +31,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithCarInsurance_IncludesVehicleData()
     {
-        var response = await _client.GetAsync("/api/insurances/19800101-1234");
+        var response = await _client.GetAsync("/api/v1/insurances/19800101-1234");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -47,7 +47,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithMultipleInsurances_CalculatesTotalCostCorrectly()
     {
-        var response = await _client.GetAsync("/api/insurances/19770505-1111");
+        var response = await _client.GetAsync("/api/v1/insurances/19770505-1111");
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
@@ -60,7 +60,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithInvalidPersonalNumber_ReturnsBadRequest()
     {
-        var response = await _client.GetAsync("/api/insurances/invalid");
+        var response = await _client.GetAsync("/api/v1/insurances/invalid");
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
@@ -68,7 +68,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithUnknownPerson_ReturnsNotFound()
     {
-        var response = await _client.GetAsync("/api/insurances/19990101-9999");
+        var response = await _client.GetAsync("/api/v1/insurances/19990101-9999");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
@@ -76,7 +76,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_ResponseContentType_IsApplicationJson()
     {
-        var response = await _client.GetAsync("/api/insurances/19951212-9999");
+        var response = await _client.GetAsync("/api/v1/insurances/19951212-9999");
 
         response.Content.Headers.ContentType?.MediaType.ShouldBe("application/json");
     }
@@ -84,7 +84,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_ReturnsValidJsonStructure()
     {
-        var response = await _client.GetAsync("/api/insurances/19951212-9999");
+        var response = await _client.GetAsync("/api/v1/insurances/19951212-9999");
         var json = await response.Content.ReadAsStringAsync();
 
         json.ShouldContain("personalNumber");
@@ -95,7 +95,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_AllInsurancesHaveRequiredFields()
     {
-        var response = await _client.GetAsync("/api/insurances/19770505-1111");
+        var response = await _client.GetAsync("/api/v1/insurances/19770505-1111");
         var result = await response.Content.ReadFromJsonAsync<InsuranceResponseDto>();
 
         result.ShouldNotBeNull();
@@ -107,7 +107,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithMissingPersonalNumber_ReturnsNotFound()
     {
-        var response = await _client.GetAsync("/api/insurances/");
+        var response = await _client.GetAsync("/api/v1/insurances/");
 
         response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
@@ -115,7 +115,7 @@ public class InsuranceApiTests : IClassFixture<InsuranceApiFactory>
     [Fact]
     public async Task GetInsurances_WithWhitespacePersonalNumber_ReturnsBadRequest()
     {
-        var response = await _client.GetAsync("/api/insurances/%20");
+        var response = await _client.GetAsync("/api/v1/insurances/%20");
 
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
     }
