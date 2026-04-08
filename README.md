@@ -356,31 +356,19 @@ The solution includes comprehensive test coverage:
 - **Moq**: Mocking dependencies
 - **WebApplicationFactory**: Integration testing for HTTP endpoints
 
-### Example Test
-
-```csharp
-[Fact]
-public void GetVehicle_WithValidRegistration_ReturnsVehicle()
-{
-    // Arrange
-    var repo = new InMemoryVehicleRepository();
-    var service = new VehicleService(repo, NullLogger<VehicleService>.Instance);
-
-    // Act
-    var result = service.GetVehicle(\"ABC123\");
-
-    // Assert
-    result.IsSuccess.ShouldBeTrue();
-    result.Value.ShouldNotBeNull();
-    result.Value!.RegistrationNumber.ShouldBe(\"ABC123\");
-}
-```
-
 ## Project Structure
 
 ```
 ThreadPilot/
 +-- src/
+¦   +-- ThreadPilot.AppHost/                 # Aspire orchestration
+¦   ¦   +-- AppHost.cs                       # Service configuration
+¦   ¦
+¦   +-- ThreadPilot.ServiceDefaults/         # Shared service configuration
+¦   ¦   +-- Extensions.cs                    # Health checks, telemetry, etc.
+¦   ¦   +-- Middleware/
+¦   ¦       +-- CorrelationIdMiddleware.cs   # Request correlation
+¦   ¦
 ¦   +-- ThreadPilot.VehicleService/          # Vehicle microservice
 ¦   ¦   +-- Program.cs                       # API endpoints & configuration
 ¦   ¦   +-- Vehicles/
@@ -390,8 +378,8 @@ ThreadPilot/
 ¦   +-- ThreadPilot.InsuranceService/        # Insurance microservice
 ¦   ¦   +-- Program.cs                       # API endpoints & configuration
 ¦   ¦   +-- Insurances/
-¦   ¦   ¦   +-- InsuranceService.cs          # Business logic
-¦   ¦   ¦   +-- IInsuranceRepository.cs      # Data access abstraction
+¦   ¦       +-- InsuranceService.cs          # Business logic
+¦   ¦       +-- IInsuranceRepository.cs      # Data access abstraction
 ¦   ¦   +-- VehicleClient/
 ¦   ¦       +-- VehicleClient.cs             # HTTP client for Vehicle Service
 ¦   ¦
@@ -400,14 +388,6 @@ ThreadPilot/
 ¦           +-- Result.cs                    # Result pattern implementation
 ¦           +-- ResultHttpExtensions.cs      # Problem Details mapping
 ¦           +-- Error.cs                     # Error model
-¦
-+-- ThreadPilot.AppHost/                     # Aspire orchestration
-¦   +-- AppHost.cs                           # Service configuration
-¦
-+-- ThreadPilot.ServiceDefaults/             # Shared service configuration
-¦   +-- Extensions.cs                        # Health checks, telemetry, etc.
-¦   +-- Middleware/
-¦       +-- CorrelationIdMiddleware.cs       # Request correlation
 ¦
 +-- tests/
     +-- ThreadPilot.VehicleService.Tests/    # Vehicle service tests
@@ -424,71 +404,26 @@ ThreadPilot/
 - **xUnit + Shouldly + Moq**: Testing stack
 - **Microsoft.Extensions.Http.Resilience**: HTTP resilience and fault handling
 
-## Development Tips
-
-### Adding a New Endpoint
-
-1. Define the endpoint in `Program.cs`:
-   ```csharp
-   v1.MapGet(\"/vehicles\", 
-       (IVehicleService service) => service.GetAllVehicles().ToHttpResult())
-       .WithName(\"GetAllVehicles\")
-       .WithOpenApi();
-   ```
-
-2. Implement business logic in the service class using Result pattern:
-   ```csharp
-   public Result<List<Vehicle>> GetAllVehicles()
-   {
-       try
-       {
-           var vehicles = _repository.GetAll();
-           return Result<List<Vehicle>>.Success(vehicles);
-       }
-       catch (Exception ex)
-       {
-           _logger.LogError(ex, \"Failed to retrieve all vehicles\");
-           return Result<List<Vehicle>>.Failure(Errors.InternalError);
-       }
-   }
-   ```
-
-3. Add tests for success and failure scenarios
-
-### Debugging Services
-
-- Use the **Aspire Dashboard** to view logs across all services
-- Set breakpoints in Visual Studio and debug normally
-- Check the **Traces** tab to follow request flow across services
-- Monitor **Metrics** for performance insights
-
-### Common Errors
-
-| Error | Solution |
-|-------|----------|
-| Port already in use | Aspire assigns dynamic ports; check Dashboard for current endpoints |
-| Service not starting | Check Output window for exceptions during startup |
-| Tests failing after changes | Run `dotnet build` before `dotnet test --no-build` |
-
-## License
-
-This is a demonstration project for educational purposes.
-
-## Contributing
-
-This is a sample project. Feel free to fork and experiment with different patterns and technologies!
-
 ---
 
 ## Reflection
 
+**Challenging Aspects:**
+- **Finding the Right Abstraction Level**: Balancing between over-engineering (e.g., adding unnecessary patterns) and keeping it production-relevant. I aimed for a solution that demonstrates real-world patterns without excessive complexity.
+
+
+**Interesting Aspects:**
+- **.NET Aspire**: Aspire's orchestration capabilities. The unified dashboard for logs, traces, and metrics across services to significantly improve the development experience. 
+
+
 ### Similar Projects or Experience
 
-_[To be completed]_
+I have worked with similar microservices architectures and integration patterns in both PwC and Dustin:
 
-### Challenges and Interesting Aspects
+- **PwC (Case Management System)**: Built integrations between Azure App Services and Azure Functions for document processing and workflow orchestration. Gained experience with service-to-service communication, error handling, and monitoring distributed systems.
 
-_[To be completed]_
+- **Dustin (Pricing & Availability Platform)**: Developed event-driven architecture using Azure Service Bus and Azure Functions to handle real-time price updates and inventory synchronization across multiple systems.
+
 
 ### Future Improvements
 
@@ -496,7 +431,7 @@ If given more time, here are recommended enhancements to make ThreadPilot produc
 
 **Infrastructure & Resilience:**
 - **Database Integration**: Replace in-memory repositories with Entity Framework Core + PostgreSQL/SQL Server
-- **Distributed Caching**: Add Redis cache for frequently accessed vehicle/insurance data
+- **Distributed Caching**: Add HybridCache or FusionCache with Redis cache for frequently accessed vehicle/insurance data
 - **Advanced Resilience Policies**: Implement Polly circuit breakers, bulkhead isolation, and advanced retry strategies beyond basic HTTP resilience
 - **Message Queue Integration**: Add Azure Service Bus or RabbitMQ for asynchronous event-driven communication between services
 
@@ -513,16 +448,15 @@ If given more time, here are recommended enhancements to make ThreadPilot produc
 - **Health Check Endpoints**: Add comprehensive health checks that verify database connectivity, external service availability, etc.
 
 **Testing & Quality:**
-- **Contract Testing**: Use Pact (consumer-driven contracts) to test API compatibility between InsuranceService and VehicleService. This ensures that when InsuranceService expects certain response formats from VehicleService, those contracts are verified in both services' test suites, preventing breaking changes during independent deployments.
-- **Performance Testing**: Implement load testing with JMeter or k6 to identify bottlenecks under realistic traffic patterns
-- **Mutation Testing**: Use Stryker.NET to verify test effectiveness by introducing small code mutations and ensuring tests catch them
+- **Unit Testing**: Continue adding unit tests
+- **Integration Testing**: Continue adding integration tests
+- **Performance Testing**: Implement load testing to identify bottlenecks under realistic traffic patterns
 
 **API Evolution:**
-- **API Gateway**: Add YARP (Yet Another Reverse Proxy) or Ocelot as a gateway layer to provide:
+- **API Gateway**: Add Azure API Management to provide:
   - Single entry point for all microservices
   - Centralized authentication, rate limiting, and request logging
   - Backend service routing without exposing internal service URLs to clients
-- **GraphQL**: Offer a GraphQL endpoint alongside REST for clients needing flexible queries (e.g., mobile apps that want to fetch vehicle + insurance data in one request with specific field selection to reduce payload size)
 - **Webhook Support**: Allow external systems to register webhook URLs to receive real-time notifications when:
   - Insurance policies are created/updated/cancelled
   - Vehicle data changes (useful for third-party integrations like accounting systems or CRM platforms)
@@ -549,14 +483,13 @@ If given more time, here are recommended enhancements to make ThreadPilot produc
   - Add proper indexes on frequently queried columns (registration number, personal number, policy dates)
   - Implement connection pooling and configure appropriate timeout settings
   - Use query profiling tools to identify slow queries and optimize with appropriate indexes or query restructuring
-  - Consider read replicas for reporting queries to offload primary database
+
 - **Caching Strategy**: Implement multi-level caching:
   - **In-Memory Cache** (IMemoryCache) for frequently accessed data with short TTL
   - **Distributed Cache** (Redis) for data shared across service instances
-  - Cache vehicle lookups (they rarely change) with longer TTL, invalidate on updates
-  - Use cache-aside pattern with Result<T> to handle cache misses gracefully
+  - **HybridCache** or **FusionCache** for more advanced features
+
 - **Pagination**: Add pagination support for potential list endpoints (e.g., all vehicles, all insurances for admin dashboards) with skip/take or cursor-based pagination
-- **Response Compression**: Enable Brotli/Gzip compression for API responses to reduce bandwidth usage
 - **Database Connection Resilience**: Use Polly retry policies for transient database failures with exponential backoff
 
 These improvements would transform ThreadPilot from a demonstration project into an enterprise-grade, production-ready microservices platform.
