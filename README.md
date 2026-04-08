@@ -11,6 +11,7 @@ ThreadPilot is a sample system that demonstrates:
 - **Standardized Error Responses**: RFC 7807 Problem Details for consistent HTTP error responses
 - **Observability**: Built-in health checks, telemetry, and distributed tracing with .NET Aspire
 - **API Versioning**: URL path versioning strategy for stable, evolvable APIs
+- **Code Style Enforcement**: EditorConfig for consistent code formatting across the team and IDEs
 
 ### Services
 
